@@ -51,14 +51,16 @@ export class EC2BasicsStack extends cdk.Stack {
       ]
     })
 
+    let myDomain = 'taylorm.net'
+
     const zone = route53.HostedZone.fromLookup(this, 'HostedZone', {
-      domainName: 'taylorm.net',
+      domainName: myDomain,
       privateZone: false
     });
 
     new route53.RecordSet(this, 'Basic', {
       zone,
-      recordName: 'test.taylorm.net',
+      recordName: 'test' + '.' + myDomain,
       recordType: route53.RecordType.A,
       target: route53.AddressRecordTarget.fromIpAddresses(ec2Instance.attrPublicIp),
       ttl: Duration.seconds(60)
