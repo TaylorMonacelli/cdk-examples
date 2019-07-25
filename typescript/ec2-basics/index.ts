@@ -17,7 +17,15 @@ export class EC2BasicsStack extends cdk.Stack {
       description: 'Allow ssh access to ec2 instances from anywhere',
       allowAllOutbound: true 
     });
-    mySecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(22), 'allow public ssh access')
+
+    const rules = [
+      ec2.Port.icmpPing(),
+      ec2.Port.tcp(22),
+    ];
+
+    for (const rule of rules) {
+      mySecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), rule);
+    }
 
     // We are using the latest AMAZON LINUX AMI
     const awsAMI = new ec2.AmazonLinuxImage({generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2});
