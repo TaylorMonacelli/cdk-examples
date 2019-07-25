@@ -36,7 +36,7 @@ export class EC2BasicsStack extends cdk.Stack {
     // We define instance details here
     const ec2Instance = new ec2.CfnInstance(this, "test-instance", {
       imageId: awsAMI.getImage(this).imageId,
-      instanceType: "t2.micro",
+      instanceType: "t2.nano",
       monitoring: false,
       tags: [
         {"key": "Name", "value": "test-instance"}
