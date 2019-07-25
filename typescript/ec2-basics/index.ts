@@ -1,5 +1,7 @@
 import cdk = require('@aws-cdk/core');
 import ec2 = require('@aws-cdk/aws-ec2');
+import route53 = require('@aws-cdk/aws-route53');
+import { Duration } from '@aws-cdk/core';
 
 export class EC2BasicsStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -48,6 +50,19 @@ export class EC2BasicsStack extends cdk.Stack {
         }
       ]
     })
+
+    const zone = route53.HostedZone.fromLookup(this, 'HostedZone', {
+      domainName: 'taylorm.net',
+      privateZone: false
+    });
+
+    new route53.RecordSet(this, 'Basic', {
+      zone,
+      recordName: 'test.taylorm.net',
+      recordType: route53.RecordType.A,
+      target: route53.AddressRecordTarget.fromIpAddresses(ec2Instance.attrPublicIp),
+      ttl: Duration.seconds(60)
+    });
   }
 }
 
